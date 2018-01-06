@@ -7,7 +7,8 @@ output:
 fig.path='figure/'
 
 ## Loading and preprocessing the data
-```{r echo=TRUE}
+
+```r
 unzip("~/RepData_PeerAssessment1/activity.zip", "activity.csv")
 activity <- read.csv("activity.csv")
 activity[,2] <- as.Date(strptime(activity[,2], "%Y - %m - %d"))
@@ -15,20 +16,27 @@ activity[,2] <- as.Date(strptime(activity[,2], "%Y - %m - %d"))
 
 ## What is mean total number of steps taken per day?
 
-```{R echo=TRUE}
+
+```r
 sum_by_day <- with(activity, tapply(steps, date, function(x) {sum(x,na.rm=TRUE)}))
 hist(sum_by_day, main = "Total Number of Steps Taken Each Day", xlab="Number of Steps", col="red")
 abline(v = mean(sum_by_day), col="green")
 abline(v = median(sum_by_day), col="yellow")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 avg <- mean(sum_by_day)
 med <- median(sum_by_day)
 ```
-The overall Mean steps taken per day is ``r avg``  
-The overall Median steps taken per day is ``r med``
+The overall Mean steps taken per day is `9354.2295082`  
+The overall Median steps taken per day is `10395`
 
 
 ## What is the average daily activity pattern?
-```{r echo=TRUE}
+
+```r
 avg_by_day <- with(activity, tapply(steps, interval, function(x){mean(x, na.rm = TRUE)}))
 
 combine <- data.frame(avg_by_day, unique(activity$interval))
@@ -36,20 +44,22 @@ colnames(combine) <- c("Avg_Steps", "Interval")
 
 library(lattice)
 xyplot(Avg_Steps~Interval, combine, type='l', ylab = "Average Number of Steps",main = "Average Activity in a Day")
-
-max_activity <- max(combine$Avg_Steps)
-max_activity_interval <- subset(combine, Avg_Steps==max_activity)[2]
-
-
 ```
 
-The Interval with maximum activity is ``r max_activity_interval``
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+```r
+max_activity <- max(combine$Avg_Steps)
+max_activity_interval <- subset(combine, Avg_Steps==max_activity)[2]
+```
+
+The Interval with maximum activity is `835`
 
 
 ## Imputing missing values
 ###Imputed using mean for that 5 minute interval
-```{r echo=TRUE}
 
+```r
 missing_activity <- subset( activity , is.na(activity$steps))
 non_missing_activity <- subset(activity, !is.na(activity$steps))
 for(i in seq_along(missing_activity$interval))
@@ -62,16 +72,20 @@ sum_by_day2 <- with(total_activity, tapply(steps, date, function(x) {sum(x,na.rm
 hist(sum_by_day2, main = "Total Number of Steps Taken Each Day", xlab="Number of Steps", col="red")
 abline(v = mean(sum_by_day2), col="green")
 abline(v = median(sum_by_day2), col="yellow")
-
-impact <- sum(total_activity$steps) - sum(activity$steps,na.rm=TRUE)
-
 ```
 
-The impact of imputing with the mean is that the total number of steps recorded increased by ``r impact`
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
+impact <- sum(total_activity$steps) - sum(activity$steps,na.rm=TRUE)
+```
+
+The impact of imputing with the mean is that the total number of steps recorded increased by `8.6129509\times 10^{4}
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r echo=TRUE}
+
+```r
 for(i in seq_along(total_activity$interval))
     
 total_activity$day[i] <- (if (weekdays(activity$date[i]) == "Saturday" | 
@@ -97,6 +111,6 @@ xyplot(avg_by_day2~int|day,
        combine2, type='l',
        xlab='Interval', ylab = "Number of Steps",
        main = "Average Activity in a Day", layout=c(1,2))
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
