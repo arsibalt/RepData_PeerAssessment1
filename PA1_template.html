@@ -122,7 +122,6 @@ $(document).ready(function () {
 </div>
 
 
-<p>fig.path=‘figure/’</p>
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
 <pre class="r"><code>unzip(&quot;~/RepData_PeerAssessment1/activity.zip&quot;, &quot;activity.csv&quot;)
@@ -131,7 +130,8 @@ activity[,2] &lt;- as.Date(strptime(activity[,2], &quot;%Y - %m - %d&quot;))</co
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
-<pre class="r"><code>sum_by_day &lt;- with(activity, tapply(steps, date, function(x) {sum(x,na.rm=TRUE)}))
+<pre class="r"><code>fig.path='figure/'
+sum_by_day &lt;- with(activity, tapply(steps, date, function(x) {sum(x,na.rm=TRUE)}))
 hist(sum_by_day, main = &quot;Total Number of Steps Taken Each Day&quot;, xlab=&quot;Number of Steps&quot;, col=&quot;red&quot;)
 abline(v = mean(sum_by_day), col=&quot;green&quot;)
 abline(v = median(sum_by_day), col=&quot;yellow&quot;)</code></pre>

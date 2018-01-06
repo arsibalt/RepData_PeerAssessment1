@@ -4,7 +4,6 @@ output:
   html_document:
     keep_md: true
 ---
-fig.path='figure/'
 
 ## Loading and preprocessing the data
 
@@ -18,6 +17,7 @@ activity[,2] <- as.Date(strptime(activity[,2], "%Y - %m - %d"))
 
 
 ```r
+fig.path='figure/'
 sum_by_day <- with(activity, tapply(steps, date, function(x) {sum(x,na.rm=TRUE)}))
 hist(sum_by_day, main = "Total Number of Steps Taken Each Day", xlab="Number of Steps", col="red")
 abline(v = mean(sum_by_day), col="green")
